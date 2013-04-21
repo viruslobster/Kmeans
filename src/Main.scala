@@ -8,7 +8,7 @@ import scala.swing.event.ButtonClicked
 
 object KmeansGui extends SimpleSwingApplication {
   
-  val maxppc = 40; val range = 300; val sigma = 15.0; val maxc = 7; val r = new Random
+  val maxppc = 100; val range = 300; val sigma = 15.0; val maxc = 7; val r = new Random
   val colors = Array(Color.RED, Color.GREEN, Color.BLUE, Color.MAGENTA, Color.ORANGE, Color.PINK, Color.CYAN)
   var kmeans: Kmeans = _
   var clusters: IndexedSeq[(Int, Int)] = _
