@@ -37,18 +37,18 @@ object KmeansGui extends SimpleSwingApplication {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
         g.setColor(Color.BLACK)
 
-        for (i <- 0 to kmeans.clustered_data.length - 1; k <- 0 to kmeans.clustered_data(i).length - 1) {
+        for (i <- 0 to kmeans.getK - 1; k <- 0 to kmeans.clustered_data(i).length - 1) {
           g.setColor(colors(i))
           val p = kmeans.clustered_data(i)(k)
           g.fillOval(offset + p(0).toInt, offset + p(1).toInt, 4, 4)
         }
-        for (i <- 0 to kmeans.centriods.length - 1) {
+        for (i <- 0 to kmeans.getK - 1) {
           g.setColor(colors(i))
           g.fillOval(offset + kmeans.centriods(i)(0).toInt, offset + kmeans.centriods(i)(1).toInt, 10, 10)
         }
 
         g.setColor(Color.BLACK)
-        g.drawString("k = " + kmeans.centriods.length, 0, 10)
+        g.drawString("k = " + kmeans.getK, 0, 10)
         g.drawString("Converged = " + kmeans.converged(), 0, 25)
       }
     }
