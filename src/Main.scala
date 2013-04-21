@@ -52,9 +52,9 @@ object KmeansGui extends SimpleSwingApplication {
         g.drawString("Converged = " + kmeans.converged(), 0, 25)
       }
     }
-    val updateButton = new Button { text = "Update" }
-    val ranButton = new Button { text = "Randomize" }
-    val genButton = new Button { text = "Generate data" }
+    val updateButton = new Button("Update")
+    val ranButton = new Button("Randomize")
+    val genButton = new Button("Generate data")
 
     contents = new BoxPanel(Orientation.Vertical) {
       contents += panel
