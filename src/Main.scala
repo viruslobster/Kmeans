@@ -33,12 +33,10 @@ object KmeansGui extends SimpleSwingApplication {
     minimumSize = new Dimension(500, 500)
 
     val panel = new Panel {
-      override def paintComponent(g: Graphics2D) = {       
-        
+      override def paintComponent(g: Graphics2D) = {        
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-
         g.setColor(Color.BLACK)
-        //kmeans.data.foreach((p: Array[Double]) => g.fillOval(20 + p(0).toInt, 20 + p(1).toInt, 4, 4))
+        
         for (i <- 0 to kmeans.clustered_data.length - 1; k <- 0 to kmeans.clustered_data(i).length - 1) {
           g.setColor(colors(i))
           val p = kmeans.clustered_data(i)(k)
@@ -48,6 +46,10 @@ object KmeansGui extends SimpleSwingApplication {
           g.setColor(colors(i))
           g.fillOval(20 + kmeans.centriods(i)(0).toInt, 20 + kmeans.centriods(i)(1).toInt, 10, 10)
         }
+        
+        g.setColor(Color.BLACK)
+        g.drawString("k = " + kmeans.centriods.length, 0, 10)
+        g.drawString("Converged = " + kmeans.converged(), 0, 25)
       }
     }
     val updateButton = new Button { text = "Update" }
