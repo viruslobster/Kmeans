@@ -5,13 +5,7 @@ class Kmeans(k: Int, d: Int) {
   var data = ListBuffer[Array[Double]]()
   var centriods = List[Array[Double]]()
   var prev_centriods = List[Array[Double]]()
-  var clustered_data = List[ListBuffer[Array[Double]]]()
-
-  def getK = k
-
-  def addData(vector: Array[Double]) =
-    if (vector.length == d) data += vector
-    else throw new Exception("Input vector of wrong dimension!")
+  var clustered_data = List[ListBuffer[Array[Double]]]()  
 
   def init() {
     centriods = Math.ranSelect(data.toList, k)
@@ -26,6 +20,11 @@ class Kmeans(k: Int, d: Int) {
     }
   }
   
+  def update() = {
+    prev_centriods = centriods;
+    centriods = for (i <- List.range(0, k)) yield Math.ave(clustered_data(i).toList)
+  }
+  
   def converged(): Boolean = {
     if (prev_centriods == Nil) return false
     for (i <- 0 to centriods.length - 1) {
@@ -33,10 +32,11 @@ class Kmeans(k: Int, d: Int) {
     }
     return true
   }
+  
+  def getK = k
 
-  def update() = {
-    prev_centriods = centriods;
-    centriods = for (i <- List.range(0, k)) yield Math.ave(clustered_data(i).toList)
-  }
+  def addData(vector: Array[Double]) =
+    if (vector.length == d) data += vector
+    else throw new Exception("Input vector of wrong dimension!")
 
 }
