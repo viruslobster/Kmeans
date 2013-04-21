@@ -5,6 +5,7 @@ import scala.util.Random
 class Kmeans(k: Int, d: Int) {
   var data = ListBuffer[Array[Double]]()
   var centriods = List[Array[Double]]()
+  var prev_centriods = List[Array[Double]]()
   var clustered_data = List[ListBuffer[Array[Double]]]()
 
   def getK = k
@@ -24,8 +25,22 @@ class Kmeans(k: Int, d: Int) {
       clustered_data(dists indexOf (dists min)) += x
     }
   }
+  def converged(): Boolean = {
+    if(prev_centriods == Nil) return false
+    for (i <- 0 to centriods.length-1) {
+      if(!arrayeq(centriods(i), prev_centriods(i))) return false
+    }
+    return true
+  }
 
-  def update() = centriods = for (i <- List.range(0, k)) yield ave(clustered_data(i).toList)
+  def arrayeq[T](a: Array[T], b: Array[T]): Boolean = {
+    for (i <- 0 to a.length - 1) {
+      if (a(i) != b(i)) return false
+    }
+    return true
+  }
+
+  def update() = { prev_centriods = centriods; centriods = for (i <- List.range(0, k)) yield ave(clustered_data(i).toList) }
 
   def ave(list: List[Array[Double]]): Array[Double] =
     list.reduceLeft((x: Array[Double], y: Array[Double]) =>

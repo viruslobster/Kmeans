@@ -8,7 +8,7 @@ import scala.swing.event.ButtonClicked
 
 object KmeansGui extends SimpleSwingApplication {
   
-  val maxppc = 20; val range = 300; val sigma = 15.0; val maxc = 7; val r = new Random
+  val maxppc = 100; val range = 300; val sigma = 15.0; val maxc = 7; val r = new Random
   val colors = Array(Color.RED, Color.GREEN, Color.BLUE, Color.MAGENTA, Color.ORANGE, Color.PINK, Color.CYAN)
   var kmeans: Kmeans = _
   var clusters: IndexedSeq[(Int, Int)] = _
@@ -19,7 +19,7 @@ object KmeansGui extends SimpleSwingApplication {
   def genData() {
     kmeans = new Kmeans(r.nextInt(maxc - 1) + 2, 2)
     clusters = for (_ <- 0 to kmeans.getK - 1) yield (r.nextInt(range), r.nextInt(range))
-    data = for (i <- ListBuffer.range(0 , kmeans.getK); j <- 0 to r.nextInt(maxppc) + 1)
+    data = for (i <- ListBuffer.range(0 , kmeans.getK); j <- 0 to r.nextInt(maxppc-10) + 11)
       yield Array(clusters(i)._1 + r.nextGaussian * sigma, clusters(i)._2 + r.nextGaussian * sigma)
 
     kmeans.data = data
@@ -33,21 +33,24 @@ object KmeansGui extends SimpleSwingApplication {
     minimumSize = new Dimension(500, 500)
 
     val panel = new Panel {
-      override def paintComponent(g: Graphics2D) = {       
-        
+      override def paintComponent(g: Graphics2D) = {
+        val offset = 30
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-
         g.setColor(Color.BLACK)
-        //kmeans.data.foreach((p: Array[Double]) => g.fillOval(20 + p(0).toInt, 20 + p(1).toInt, 4, 4))
+        
         for (i <- 0 to kmeans.clustered_data.length - 1; k <- 0 to kmeans.clustered_data(i).length - 1) {
           g.setColor(colors(i))
           val p = kmeans.clustered_data(i)(k)
-          g.fillOval(20 + p(0).toInt, 20 + p(1).toInt, 4, 4)
+          g.fillOval(offset + p(0).toInt, offset + p(1).toInt, 4, 4)
         }
         for (i <- 0 to kmeans.centriods.length - 1) {
           g.setColor(colors(i))
-          g.fillOval(20 + kmeans.centriods(i)(0).toInt, 20 + kmeans.centriods(i)(1).toInt, 10, 10)
+          g.fillOval(offset + kmeans.centriods(i)(0).toInt, offset + kmeans.centriods(i)(1).toInt, 10, 10)
         }
+        
+        g.setColor(Color.BLACK)
+        g.drawString("k = " + kmeans.centriods.length, 0, 10)
+        g.drawString("Converged = " + kmeans.converged(), 0, 25)
       }
     }
     val updateButton = new Button { text = "Update" }
