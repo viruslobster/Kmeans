@@ -5,6 +5,7 @@ import scala.util.Random
 import scala.collection.mutable.ListBuffer
 import scala.swing.event.ButtonClicked
 import scala.swing.event.ButtonClicked
+import scala.swing.event.ButtonClicked
 
 object KmeansGui extends SimpleSwingApplication {
   val maxppc = 100; val range = 300; val sigma = 15.0; val maxc = 7; val r = new Random
@@ -55,18 +56,20 @@ object KmeansGui extends SimpleSwingApplication {
     val updateButton = new Button("Update")
     val ranButton = new Button("Randomize")
     val genButton = new Button("Generate data")
+    val runButton = new Button("Run")
 
     contents = new BoxPanel(Orientation.Vertical) {
       contents += panel
       contents += new BoxPanel(Orientation.Horizontal) {
+        contents += runButton
         contents += updateButton
         contents += ranButton
-        contents += genButton
+        contents += genButton        
       }
       border = Swing.EmptyBorder(30, 30, 10, 30)
     }
 
-    listenTo(updateButton, ranButton, genButton)
+    listenTo(updateButton, ranButton, genButton, runButton)
     reactions += {
       case ButtonClicked(`updateButton`) =>
         kmeans.update(); kmeans.assign(); repaint()
@@ -74,6 +77,11 @@ object KmeansGui extends SimpleSwingApplication {
         kmeans.init(); kmeans.assign(); repaint()
       case ButtonClicked(`genButton`) =>
         genData(); kmeans.init(); kmeans.assign(); repaint()
+      case ButtonClicked(`runButton`) =>
+        while(!kmeans.converged) {
+          kmeans.update();kmeans.assign();
+        }
+        repaint()
     }
   }
 }
